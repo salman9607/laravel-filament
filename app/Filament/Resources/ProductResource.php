@@ -30,19 +30,71 @@ class ProductResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                ->required()
-                ->reactive()
-                ->afterStateUpdated(function (\Closure $set, $state){
-                    $set('slug', Str::slug($state));
-                }),
-                Forms\Components\TextInput::make('slug')->required(),
-                Forms\Components\TextInput::make('price')->required()->rule('numeric'),
-                Forms\Components\FileUpload::make('image'),
+                Forms\Components\Wizard::make([
+                    Forms\Components\Wizard\Step::make('Main Fields')->schema([ // 5th Way of doing
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function (\Closure $set, $state){
+                                $set('slug', Str::slug($state));
+                            }),
+                        Forms\Components\TextInput::make('slug')->required(),
+                    ]),
+                    Forms\Components\Wizard\Step::make('2nd Menu')->schema([
+                        Forms\Components\TextInput::make('price')->required()->rule('numeric'),
+                        Forms\Components\FileUpload::make('image'),
+                    ])
+                ])
+//                Forms\Components\Tabs::make('Main Fields')->tabs([
+//                    Forms\Components\Tabs\Tab::make('Main Fields')->schema([ // 4th Way of doing
+//                        Forms\Components\TextInput::make('name')
+//                            ->required()
+//                            ->reactive()
+//                            ->afterStateUpdated(function (\Closure $set, $state){
+//                                $set('slug', Str::slug($state));
+//                            }),
+//                        Forms\Components\TextInput::make('slug')->required(),
+//                    ]),
+//                    Forms\Components\Tabs\Tab::make('2nd Menu')->schema([
+//                        Forms\Components\TextInput::make('price')->required()->rule('numeric'),
+//                        Forms\Components\FileUpload::make('image'),
+//                    ])
+//                ]),
+//                Forms\Components\Section::make('Main Fields')
+//                    ->description('Fill in all fields')->schema([ // 3rd Way of doing
+//                    Forms\Components\TextInput::make('name')
+//                        ->required()
+//                        ->reactive()
+//                        ->afterStateUpdated(function (\Closure $set, $state){
+//                            $set('slug', Str::slug($state));
+//                        }),
+//                    Forms\Components\TextInput::make('slug')->required(),
+//                ]),
+//                Forms\Components\Fieldset::make('Main Fields')->schema([ // 2nd Way of doing
+//                    Forms\Components\TextInput::make('name')
+//                        ->required()
+//                        ->reactive()
+//                        ->afterStateUpdated(function (\Closure $set, $state){
+//                            $set('slug', Str::slug($state));
+//                        }),
+//                    Forms\Components\TextInput::make('slug')->required(),
+//                ]),
+//                Forms\Components\Card::make()->schema([ // 1st Way of doing
+//                    Forms\Components\TextInput::make('name')
+//                        ->required()
+//                        ->reactive()
+//                        ->afterStateUpdated(function (\Closure $set, $state){
+//                            $set('slug', Str::slug($state));
+//                        }),
+//                    Forms\Components\TextInput::make('slug')->required(),
+//                ]),
+
+
 //                Forms\Components\MultiSelect::make('tags')//here we are in product with relation tag as multiselect, the system wil automatically insert data into product_tag table
 //                    ->relationship('tags', 'name')
 
             ]);
+//            ->columns(1);//for set number per column in one row
     }
 
     public static function table(Table $table): Table
